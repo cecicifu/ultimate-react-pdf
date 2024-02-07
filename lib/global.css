@@ -1,0 +1,24 @@
+.page {
+	display: flex;
+}
+
+.annotations-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	opacity: 1;
+}
+
+.annotations-layer section {
+	position: absolute;
+	cursor: pointer;
+}
+
+.annotations-layer section a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
