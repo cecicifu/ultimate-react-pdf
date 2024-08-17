@@ -9,11 +9,13 @@ import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
 import type { Status, ViewerContextProps, ViewerProviderProps } from "@/types"
 
-// If you want to use the worker locally change to "pdfjs-dist/build/pdf.worker.min.mjs"
-GlobalWorkerOptions.workerSrc = new URL(
-	"./build/pdf.worker.min.mjs",
-	import.meta.url
-).toString()
+import workerContent from "./build/pdf.worker.min.mjs.json"
+
+const workerBlob = new Blob([workerContent as BlobPart], {
+	type: "text/javascript",
+})
+const workerBlobURL = URL.createObjectURL(workerBlob)
+GlobalWorkerOptions.workerSrc = workerBlobURL
 
 export const ViewerContext = createContext<ViewerContextProps | null>(null)
 

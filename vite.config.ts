@@ -44,6 +44,8 @@ export default defineConfig({
 				{
 					src: workerDir,
 					dest: "./build",
+					rename: "pdf.worker.min.mjs.json",
+					transform: (contents) => JSON.stringify(contents),
 				},
 				{
 					src: standardFontsDir,
