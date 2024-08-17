@@ -48,6 +48,7 @@ export function AnnotationLayer({
 			div: layer,
 			accessibilityManager: null, // TODO
 			annotationCanvasMap: null, // TODO
+			annotationEditorUIManager: null, // TODO
 			page,
 			viewport,
 		})
@@ -131,9 +132,6 @@ export function AnnotationLayer({
 						link.target = newWindow ? "_blank" : externalLinkTarget || ""
 					},
 					setHash: () => {
-						/* empty method */
-					},
-					cachePageRef: () => {
 						/* empty method */
 					},
 					executeSetOCGState: () => {
