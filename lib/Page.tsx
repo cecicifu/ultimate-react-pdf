@@ -1,11 +1,14 @@
-import { PageViewport } from "pdfjs-dist"
-import { type RenderParameters } from "pdfjs-dist/types/src/display/api"
+import type { PageViewport } from "pdfjs-dist"
+import type { RenderParameters } from "pdfjs-dist/types/src/display/api"
 import { useEffect, useState } from "react"
 
+import { AnnotationLayer } from "@/AnnotationLayer"
 import { Controls, ErrorStatus, LoadingStatus } from "@/components"
 import { STATUS } from "@/constants"
 import { useViewerContext } from "@/hooks/useViewerContext"
-import { type PageProps } from "@/types"
+import type { PageProps } from "@/types"
+
+import UltimateReactPdfError from "./components/UltimateReactPdfError"
 
 export function Page({
 	canvasRef,
@@ -32,33 +35,33 @@ export function Page({
 			try {
 				const page = await pdf.getPage(currentPage)
 
-				const viewport = page.getViewport({ scale: viewPortScale })
+				const pageViewport = page.getViewport({ scale: viewPortScale })
 
 				const canvas = document.querySelector<HTMLCanvasElement>(
 					`#page-${currentPage}`
 				)
-				if (!canvas) throw new Error("Canvas not found")
+				if (!canvas) throw new UltimateReactPdfError("Canvas not found")
 
 				const context = canvas.getContext("2d")
-				if (!context) throw new Error("Context not found")
+				if (!context) throw new UltimateReactPdfError("Context not found")
 
-				canvas.height = viewport.height
-				canvas.width = viewport.width
+				canvas.height = pageViewport.height
+				canvas.width = pageViewport.width
 
 				const renderContext: RenderParameters = {
 					canvasContext: context,
-					viewport: viewport,
+					viewport: pageViewport,
 				}
 
 				await page.render(renderContext).promise
 
-				setViewport(viewport)
+				setViewport(pageViewport)
 
 				onPageLoad && onPageLoad(page, pdf)
 
 				setStatus(STATUS.READY)
 			} catch (error) {
-				if (error instanceof Error) console.error(error.message)
+				if (error instanceof UltimateReactPdfError) console.error(error.message)
 
 				onPageError && onPageError(error, pdf)
 				setStatus(STATUS.ERROR)
@@ -78,6 +81,8 @@ export function Page({
 		viewPortScale,
 	])
 
+	if (!pdf) return null
+
 	return (
 		<div className={className} ref={pageRef}>
 			{status === STATUS.LOADING && <LoadingStatus />}
@@ -91,17 +96,16 @@ export function Page({
 				/>
 			)}
 
-			{pdf && (
-				<div
-					style={{
-						position: "relative",
-						height: viewport?.height,
-						width: viewport?.width,
-					}}
-				>
-					<canvas ref={canvasRef} className="page" id={`page-${currentPage}`} />
-				</div>
-			)}
+			<div
+				style={{
+					position: "relative",
+					height: viewport?.height,
+					width: viewport?.width,
+				}}
+			>
+				<canvas ref={canvasRef} className="page" id={`page-${currentPage}`} />
+				<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
+			</div>
 		</div>
 	)
 }

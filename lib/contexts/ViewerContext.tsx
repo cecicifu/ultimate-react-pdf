@@ -5,12 +5,9 @@ import {
 } from "pdfjs-dist"
 import { createContext, useEffect, useState } from "react"
 
+import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
-import {
-	type Status,
-	type ViewerContextProps,
-	type ViewerProviderProps,
-} from "@/types"
+import type { Status, ViewerContextProps, ViewerProviderProps } from "@/types"
 
 GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.mjs",
@@ -22,6 +19,8 @@ export const ViewerContext = createContext<ViewerContextProps | null>(null)
 export const PdfViewerProvider = ({
 	src,
 	children,
+	externalLinkTarget,
+	externalLinkRel,
 	onDocumentError,
 	onDocumentLoad,
 }: ViewerProviderProps) => {
@@ -39,7 +38,8 @@ export const PdfViewerProvider = ({
 
 					setPdf(pdfLoaded)
 				} catch (error) {
-					if (error instanceof Error) console.error(error.message)
+					if (error instanceof UltimateReactPdfError)
+						console.error(error.message)
 
 					onDocumentError && onDocumentError(error)
 					setStatus(STATUS.ERROR)
@@ -58,6 +58,8 @@ export const PdfViewerProvider = ({
 				pdf,
 				status,
 				setStatus,
+				externalLinkTarget,
+				externalLinkRel,
 			}}
 		>
 			{children}

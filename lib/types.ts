@@ -1,14 +1,16 @@
-import { type PDFDocumentProxy, type PDFPageProxy } from "pdfjs-dist"
-import {
-	type DocumentInitParameters,
-	type TypedArray,
+import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
+import type {
+	DocumentInitParameters,
+	RefProxy,
+	TypedArray,
 } from "pdfjs-dist/types/src/display/api"
-import { RefObject } from "react"
+import type { ComponentProps, RefObject } from "react"
 
-import { STATUS } from "@/constants"
+import type { STATUS } from "@/constants"
 
 // return props
-export interface ViewerContextProps {
+export interface ViewerContextProps
+	extends Pick<DocumentProps, "externalLinkTarget" | "externalLinkRel"> {
 	status: Status
 	pdf?: PDFDocumentProxy
 	setStatus: (status: Status) => void
@@ -16,7 +18,14 @@ export interface ViewerContextProps {
 
 // param props
 export interface ViewerProviderProps
-	extends Pick<DocumentProps, "src" | "onDocumentError" | "onDocumentLoad"> {
+	extends Pick<
+		DocumentProps,
+		| "src"
+		| "onDocumentError"
+		| "onDocumentLoad"
+		| "externalLinkTarget"
+		| "externalLinkRel"
+	> {
 	children: React.ReactNode
 }
 
@@ -25,6 +34,8 @@ export interface DocumentProps {
 	src: DocumentSrc
 	className?: string
 	documentRef?: RefObject<HTMLDivElement>
+	externalLinkTarget?: ComponentProps<"a">["href"]
+	externalLinkRel?: ComponentProps<"a">["rel"]
 	onDocumentError?: (error: unknown) => void
 	onDocumentLoad?: (document: PDFDocumentProxy | undefined) => void
 }
@@ -43,7 +54,6 @@ export interface InfinityPageProps extends PageCommonProps {
 
 export interface PageProps extends PageCommonProps {
 	controls?: boolean
-	infinity?: boolean
 	initialPage?: Page
 	onPageChange?: (
 		page: PDFPageProxy | undefined,
@@ -67,3 +77,6 @@ export type DocumentSrc =
 export type Status = (typeof STATUS)[keyof typeof STATUS]
 
 export type Page = PDFDocumentProxy["numPages"]
+
+export type ResolvedDest = (RefProxy | number)[]
+export type Dest = Promise<ResolvedDest> | ResolvedDest | string | null

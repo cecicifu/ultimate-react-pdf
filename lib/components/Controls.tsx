@@ -1,5 +1,5 @@
 import { useViewerContext } from "@/hooks/useViewerContext"
-import { ControlsProps } from "@/types"
+import type { ControlsProps } from "@/types"
 
 export function Controls({ pageNumber, setPage, onPageChange }: ControlsProps) {
 	const { pdf } = useViewerContext()

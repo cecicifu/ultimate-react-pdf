@@ -1,11 +1,14 @@
-import { type PDFPageProxy } from "pdfjs-dist"
-import { type RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { useEffect } from "react"
+import type { PageViewport, PDFPageProxy } from "pdfjs-dist"
+import type { RenderParameters } from "pdfjs-dist/types/src/display/api"
+import { useEffect, useState } from "react"
 
+import { AnnotationLayer } from "@/AnnotationLayer"
 import { ErrorStatus, LoadingStatus } from "@/components"
 import { STATUS } from "@/constants"
 import { useViewerContext } from "@/hooks/useViewerContext"
-import { type InfinityPageProps } from "@/types"
+import type { InfinityPageProps } from "@/types"
+
+import UltimateReactPdfError from "./components/UltimateReactPdfError"
 
 export function InfinityPage({
 	canvasRef,
@@ -15,6 +18,8 @@ export function InfinityPage({
 	onPageError,
 	onPageLoad,
 }: InfinityPageProps) {
+	const [viewport, setViewport] = useState<PageViewport>()
+
 	const { status, setStatus, pdf } = useViewerContext()
 
 	useEffect(() => {
@@ -29,25 +34,27 @@ export function InfinityPage({
 
 					const page = await pdf.getPage(currentPage)
 
-					const viewport = page.getViewport({ scale: viewPortScale })
+					const pageViewport = page.getViewport({ scale: viewPortScale })
 
 					const canvas = document.querySelector<HTMLCanvasElement>(
 						`#page-${currentPage}`
 					)
-					if (!canvas) throw new Error("Canvas not found")
+					if (!canvas) throw new UltimateReactPdfError("Canvas not found")
 
 					const context = canvas.getContext("2d")
-					if (!context) throw new Error("Context not found")
+					if (!context) throw new UltimateReactPdfError("Context not found")
 
-					canvas.height = viewport.height
-					canvas.width = viewport.width
+					canvas.height = pageViewport.height
+					canvas.width = pageViewport.width
 
 					const renderContext: RenderParameters = {
 						canvasContext: context,
-						viewport: viewport,
+						viewport: pageViewport,
 					}
 
 					await page.render(renderContext).promise
+
+					setViewport(pageViewport)
 
 					pages.push(page)
 				})
@@ -75,13 +82,20 @@ export function InfinityPage({
 
 			{pdf &&
 				Array.from({ length: pdf.numPages }).map((_, index) => {
+					const page = index + 1
+
 					return (
-						<canvas
-							key={index}
-							ref={canvasRef}
-							className="page"
-							id={`page-${index + 1}`}
-						/>
+						<div
+							key={page}
+							style={{
+								position: "relative",
+								height: viewport?.height,
+								width: viewport?.width,
+							}}
+						>
+							<canvas ref={canvasRef} className="page" id={`page-${page}`} />
+							<AnnotationLayer currentPage={page} infinity={true} />
+						</div>
 					)
 				})}
 		</div>
