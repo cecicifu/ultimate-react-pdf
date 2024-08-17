@@ -25,6 +25,7 @@
 			"@/*": ["lib/*"]
 		}
 	},
-	"include": ["src", "lib", "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"],
+	"include": ["src", "lib"],
+	"exclude": ["./lib/contexts/build"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
