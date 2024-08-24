@@ -10,7 +10,10 @@ import type { STATUS } from "@/constants"
 
 // return props
 export interface ViewerContextProps
-	extends Pick<DocumentProps, "externalLinkTarget" | "externalLinkRel"> {
+	extends Pick<
+		DocumentProps,
+		"externalLinkTarget" | "externalLinkRel" | "messages"
+	> {
 	status: Status
 	pdf?: PDFDocumentProxy
 	setStatus: (status: Status) => void
@@ -25,19 +28,28 @@ export interface ViewerProviderProps
 		| "onDocumentLoad"
 		| "externalLinkTarget"
 		| "externalLinkRel"
+		| "messages"
 	> {
 	children: React.ReactNode
+}
+
+type Messages = {
+	nextButton?: string
+	previousButton?: string
+	numPagesSeparator?: string
 }
 
 export interface DocumentProps {
 	children: React.ReactNode
 	src: DocumentSrc
+	locale?: string
 	className?: string
 	documentRef?: RefObject<HTMLDivElement>
 	externalLinkTarget?: ComponentProps<"a">["href"]
 	externalLinkRel?: ComponentProps<"a">["rel"]
 	onDocumentError?: (error: unknown) => void
 	onDocumentLoad?: (document: PDFDocumentProxy | undefined) => void
+	messages?: Messages
 }
 
 export interface PageCommonProps {

@@ -26,6 +26,7 @@ export const PdfViewerProvider = ({
 	externalLinkRel,
 	onDocumentError,
 	onDocumentLoad,
+	messages,
 }: ViewerProviderProps) => {
 	const [status, setStatus] = useState<Status>(STATUS.LOADING)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
@@ -63,6 +64,7 @@ export const PdfViewerProvider = ({
 				setStatus,
 				externalLinkTarget,
 				externalLinkRel,
+				messages,
 			}}
 		>
 			{children}

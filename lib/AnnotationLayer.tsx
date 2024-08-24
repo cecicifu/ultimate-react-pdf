@@ -150,6 +150,10 @@ export function AnnotationLayer({
 	}, [currentPage, loadAnnotationLayer])
 
 	return (
-		<div ref={annotationLayer} className="annotations-layer" id="annotations" />
+		<div
+			ref={annotationLayer}
+			className="pdf-viewer__annotations-layer"
+			id="annotations"
+		/>
 	)
 }

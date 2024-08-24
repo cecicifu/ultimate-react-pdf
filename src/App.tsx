@@ -1,11 +1,11 @@
 import { Document } from "@/Document"
 import { Page } from "@/Page"
 
-import { pdfData } from "./pdfData"
+import { examplePdf } from "./example"
 
 export default function App() {
 	return (
-		<Document src={{ data: atob(pdfData) }}>
+		<Document src={{ data: atob(examplePdf) }}>
 			<Page initialPage={1} controls />
 		</Document>
 	)

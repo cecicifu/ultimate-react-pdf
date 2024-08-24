@@ -12,6 +12,11 @@ export function Document({
 	externalLinkRel,
 	onDocumentError,
 	onDocumentLoad,
+	messages = {
+		nextButton: "Next",
+		previousButton: "Previous",
+		numPagesSeparator: "of",
+	},
 }: DocumentProps) {
 	return (
 		<PdfViewerProvider
@@ -20,8 +25,12 @@ export function Document({
 			externalLinkRel={externalLinkRel}
 			onDocumentError={onDocumentError}
 			onDocumentLoad={onDocumentLoad}
+			messages={messages}
 		>
-			<div className={className} ref={documentRef}>
+			<div
+				className={className ? `${className} pdf-viewer` : "pdf-viewer"}
+				ref={documentRef}
+			>
 				{children}
 			</div>
 		</PdfViewerProvider>

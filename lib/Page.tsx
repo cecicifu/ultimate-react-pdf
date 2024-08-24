@@ -84,7 +84,7 @@ export function Page({
 	if (!pdf) return null
 
 	return (
-		<div className={className} ref={pageRef}>
+		<div className="pdf-viewer__container">
 			{status === STATUS.LOADING && <LoadingStatus />}
 			{status === STATUS.ERROR && <ErrorStatus />}
 
@@ -97,13 +97,20 @@ export function Page({
 			)}
 
 			<div
+				ref={pageRef}
+				className={
+					className ? `${className} pdf-viewer__page` : "pdf-viewer__page"
+				}
 				style={{
-					position: "relative",
 					height: viewport?.height,
 					width: viewport?.width,
 				}}
 			>
-				<canvas ref={canvasRef} className="page" id={`page-${currentPage}`} />
+				<canvas
+					ref={canvasRef}
+					className="pdf-viewer__canvas"
+					id={`page-${currentPage}`}
+				/>
 				<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
 			</div>
 		</div>

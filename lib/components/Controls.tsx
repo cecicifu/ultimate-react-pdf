@@ -2,7 +2,7 @@ import { useViewerContext } from "@/hooks/useViewerContext"
 import type { ControlsProps } from "@/types"
 
 export function Controls({ pageNumber, setPage, onPageChange }: ControlsProps) {
-	const { pdf } = useViewerContext()
+	const { pdf, messages } = useViewerContext()
 
 	const handlePrev = async () => {
 		if (!pdf) return
@@ -27,17 +27,21 @@ export function Controls({ pageNumber, setPage, onPageChange }: ControlsProps) {
 	}
 
 	return (
-		<>
-			<button onClick={handlePrev} disabled={pageNumber === 1}>
-				Anterior
-			</button>
-			<button onClick={handleNext} disabled={pdf?.numPages === pageNumber}>
-				Siguiente
-			</button>
+		<div className="pdf-viewer__controls">
+			<div className="pdf-viewer__controls__buttons">
+				<button onClick={handlePrev} disabled={pageNumber === 1}>
+					{messages?.previousButton}
+				</button>
+				<button onClick={handleNext} disabled={pdf?.numPages === pageNumber}>
+					{messages?.nextButton}
+				</button>
+			</div>
 
-			<span>
-				{pageNumber}/{pdf?.numPages}
-			</span>
-		</>
+			<div className="pdf-viewer_controls_num-pages">
+				<span>
+					{pageNumber} {messages?.numPagesSeparator} {pdf?.numPages}
+				</span>
+			</div>
+		</div>
 	)
 }
