@@ -1,6 +1,6 @@
 import type { PageViewport } from "pdfjs-dist"
 import type { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { AnnotationLayer } from "@/AnnotationLayer"
 import { Controls, ErrorStatus, LoadingStatus } from "@/components"
@@ -24,15 +24,19 @@ export function Page({
 	const [currentPage, setCurrentPage] = useState(initialPage)
 	const [viewport, setViewport] = useState<PageViewport>()
 
+	const renderInProgress = useRef(false)
+
 	const { status, setStatus, pdf } = useViewerContext()
 
 	const showControls = controls && status === STATUS.READY
 
 	useEffect(() => {
-		if (!pdf) return
+		if (!pdf || renderInProgress.current) return
 
 		const loadPage = async () => {
 			try {
+				renderInProgress.current = true
+
 				const page = await pdf.getPage(currentPage)
 
 				const pageViewport = page.getViewport({ scale: viewPortScale })
@@ -60,6 +64,8 @@ export function Page({
 				onPageLoad && onPageLoad(page, pdf)
 
 				setStatus(STATUS.READY)
+
+				renderInProgress.current = false
 			} catch (error) {
 				if (error instanceof UltimateReactPdfError) console.error(error.message)
 
