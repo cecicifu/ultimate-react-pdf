@@ -20,16 +20,16 @@ export function InfinityPage({
 }: InfinityPageProps) {
 	const [viewport, setViewport] = useState<PageViewport>()
 
-	const renderInProgress = useRef(false)
+	const isRenderingInProgress = useRef(false)
 
 	const { status, setStatus, pdf } = useViewerContext()
 
 	useEffect(() => {
-		if (!pdf || renderInProgress.current) return
+		if (!pdf || isRenderingInProgress.current) return
 
 		const loadPage = async () => {
 			try {
-				renderInProgress.current = true
+				isRenderingInProgress.current = true
 
 				const pages: PDFPageProxy[] = []
 
@@ -62,7 +62,7 @@ export function InfinityPage({
 
 					pages.push(page)
 
-					renderInProgress.current = false
+					isRenderingInProgress.current = false
 				})
 
 				onPageLoad && onPageLoad(pages, pdf)

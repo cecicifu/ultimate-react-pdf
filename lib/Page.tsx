@@ -24,18 +24,18 @@ export function Page({
 	const [currentPage, setCurrentPage] = useState(initialPage)
 	const [viewport, setViewport] = useState<PageViewport>()
 
-	const renderInProgress = useRef(false)
+	const isRenderingInProgress = useRef(false)
 
 	const { status, setStatus, pdf } = useViewerContext()
 
 	const showControls = controls && status === STATUS.READY
 
 	useEffect(() => {
-		if (!pdf || renderInProgress.current) return
+		if (!pdf || isRenderingInProgress.current) return
 
 		const loadPage = async () => {
 			try {
-				renderInProgress.current = true
+				isRenderingInProgress.current = true
 
 				const page = await pdf.getPage(currentPage)
 
@@ -65,7 +65,7 @@ export function Page({
 
 				setStatus(STATUS.READY)
 
-				renderInProgress.current = false
+				isRenderingInProgress.current = false
 			} catch (error) {
 				if (error instanceof UltimateReactPdfError) console.error(error.message)
 

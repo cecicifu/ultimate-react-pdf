@@ -3,7 +3,7 @@ import {
 	GlobalWorkerOptions,
 	type PDFDocumentProxy,
 } from "pdfjs-dist"
-import { createContext, useEffect, useState } from "react"
+import { createContext, useEffect, useRef, useState } from "react"
 
 import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
@@ -31,11 +31,15 @@ export const PdfViewerProvider = ({
 	const [status, setStatus] = useState<Status>(STATUS.LOADING)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
+	const isLoadingInProgress = useRef(false)
+
 	useEffect(() => {
-		if (pdf) return
+		if (pdf || isLoadingInProgress.current) return
 
 		const loadDocument = async () => {
 			try {
+				isLoadingInProgress.current = true
+
 				const pdfLoaded = await getDocument(src).promise
 
 				onDocumentLoad && onDocumentLoad(pdfLoaded)
@@ -48,6 +52,8 @@ export const PdfViewerProvider = ({
 				setStatus(STATUS.ERROR)
 
 				throw error
+			} finally {
+				isLoadingInProgress.current = false
 			}
 		}
 
