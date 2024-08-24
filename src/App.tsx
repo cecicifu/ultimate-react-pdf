@@ -6,7 +6,7 @@ import { examplePdf } from "./example"
 export default function App() {
 	return (
 		<Document src={{ data: atob(examplePdf) }}>
-			<Page initialPage={1} controls />
+			<Page controls />
 		</Document>
 	)
 }

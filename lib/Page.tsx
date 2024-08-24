@@ -11,12 +11,12 @@ import type { PageProps } from "@/types"
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
 
 export function Page({
-	canvasRef,
 	className,
 	controls = false,
 	initialPage = 1,
+	annotations = true,
 	pageRef,
-	viewPortScale = window.devicePixelRatio,
+	viewPortScale = typeof window !== "undefined" ? window.devicePixelRatio : 1,
 	onPageChange,
 	onPageError,
 	onPageLoad,
@@ -85,9 +85,6 @@ export function Page({
 
 	return (
 		<div className="pdf-viewer__container">
-			{status === STATUS.LOADING && <LoadingStatus />}
-			{status === STATUS.ERROR && <ErrorStatus />}
-
 			{showControls && (
 				<Controls
 					pageNumber={currentPage}
@@ -95,6 +92,9 @@ export function Page({
 					onPageChange={onPageChange}
 				/>
 			)}
+
+			{status === STATUS.LOADING && <LoadingStatus />}
+			{status === STATUS.ERROR && <ErrorStatus />}
 
 			<div
 				ref={pageRef}
@@ -106,12 +106,10 @@ export function Page({
 					width: viewport?.width,
 				}}
 			>
-				<canvas
-					ref={canvasRef}
-					className="pdf-viewer__canvas"
-					id={`page-${currentPage}`}
-				/>
-				<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
+				<canvas className="pdf-viewer__canvas" id={`page-${currentPage}`} />
+				{annotations && (
+					<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
+				)}
 			</div>
 		</div>
 	)

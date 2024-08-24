@@ -6,7 +6,7 @@ import { useViewerContext } from "@/hooks/useViewerContext"
 
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
 import { DEFAULT_LINK_REL } from "./constants"
-import type { Dest, Page, ResolvedDest } from "./types"
+import type { AnnotationLayerProps, Dest, ResolvedDest } from "./types"
 
 const scrollPageIntoView = (page: number) => {
 	document.querySelector<HTMLCanvasElement>(`#page-${page}`)?.scrollIntoView({
@@ -14,12 +14,6 @@ const scrollPageIntoView = (page: number) => {
 		block: "center",
 		inline: "center",
 	})
-}
-
-interface AnnotationLayerProps {
-	currentPage: Page
-	setPage?: (page: number) => void
-	infinity?: boolean
 }
 
 export function AnnotationLayer({

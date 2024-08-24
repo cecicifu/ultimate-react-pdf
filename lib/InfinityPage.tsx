@@ -11,9 +11,9 @@ import type { InfinityPageProps } from "@/types"
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
 
 export function InfinityPage({
-	canvasRef,
 	className,
 	pageRef,
+	annotations = true,
 	viewPortScale = window.devicePixelRatio,
 	onPageError,
 	onPageLoad,
@@ -96,8 +96,10 @@ export function InfinityPage({
 								width: viewport?.width,
 							}}
 						>
-							<canvas ref={canvasRef} className="page" id={`page-${page}`} />
-							<AnnotationLayer currentPage={page} infinity={true} />
+							<canvas className="pdf-viewer__canvas" id={`page-${page}`} />
+							{annotations && (
+								<AnnotationLayer currentPage={page} infinity={true} />
+							)}
 						</div>
 					)
 				})}

@@ -32,24 +32,22 @@ export const PdfViewerProvider = ({
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
 	useEffect(() => {
+		if (pdf) return
+
 		const loadDocument = async () => {
-			if (!pdf) {
-				try {
-					// TODO options
-					const pdfLoaded = await getDocument(src).promise
+			try {
+				const pdfLoaded = await getDocument(src).promise
 
-					onDocumentLoad && onDocumentLoad(pdfLoaded)
+				onDocumentLoad && onDocumentLoad(pdfLoaded)
 
-					setPdf(pdfLoaded)
-				} catch (error) {
-					if (error instanceof UltimateReactPdfError)
-						console.error(error.message)
+				setPdf(pdfLoaded)
+			} catch (error) {
+				if (error instanceof UltimateReactPdfError) console.error(error.message)
 
-					onDocumentError && onDocumentError(error)
-					setStatus(STATUS.ERROR)
+				onDocumentError && onDocumentError(error)
+				setStatus(STATUS.ERROR)
 
-					throw error
-				}
+				throw error
 			}
 		}
 
