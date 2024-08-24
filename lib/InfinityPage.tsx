@@ -76,7 +76,7 @@ export function InfinityPage({
 	}, [onPageError, onPageLoad, pdf, setStatus, viewPortScale])
 
 	return (
-		<div className={className} ref={pageRef}>
+		<div className="pdf-viewer__container">
 			{status === STATUS.LOADING && <LoadingStatus />}
 			{status === STATUS.ERROR && <ErrorStatus />}
 
@@ -87,8 +87,11 @@ export function InfinityPage({
 					return (
 						<div
 							key={page}
+							ref={pageRef}
+							className={
+								className ? `${className} pdf-viewer__page` : "pdf-viewer__page"
+							}
 							style={{
-								position: "relative",
 								height: viewport?.height,
 								width: viewport?.width,
 							}}

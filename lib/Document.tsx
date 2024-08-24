@@ -16,6 +16,8 @@ export function Document({
 		nextButton: "Next",
 		previousButton: "Previous",
 		numPagesSeparator: "of",
+		loading: "Loading...",
+		error: "Error loading PDF",
 	},
 }: DocumentProps) {
 	return (

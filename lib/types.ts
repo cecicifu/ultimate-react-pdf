@@ -37,6 +37,8 @@ type Messages = {
 	nextButton?: string
 	previousButton?: string
 	numPagesSeparator?: string
+	loading?: string
+	error?: string
 }
 
 export interface DocumentProps {

@@ -1,3 +1,7 @@
+import { useViewerContext } from "@/hooks/useViewerContext"
+
 export function ErrorStatus() {
-	return <p>Error loading PDF</p>
+	const { messages } = useViewerContext()
+
+	return <p>{messages?.error}</p>
 }
