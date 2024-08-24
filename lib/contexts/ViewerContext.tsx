@@ -31,14 +31,14 @@ export const PdfViewerProvider = ({
 	const [status, setStatus] = useState<Status>(STATUS.LOADING)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
-	const isLoadingInProgress = useRef(false)
+	const isTaskInProgress = useRef(false)
 
 	useEffect(() => {
-		if (pdf || isLoadingInProgress.current) return
+		if (pdf || isTaskInProgress.current) return
 
 		const loadDocument = async () => {
 			try {
-				isLoadingInProgress.current = true
+				isTaskInProgress.current = true
 
 				const pdfLoaded = await getDocument(src).promise
 
@@ -53,7 +53,7 @@ export const PdfViewerProvider = ({
 
 				throw error
 			} finally {
-				isLoadingInProgress.current = false
+				isTaskInProgress.current = false
 			}
 		}
 

@@ -1,6 +1,6 @@
 import type { PageViewport, PDFPageProxy } from "pdfjs-dist"
 import type { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { AnnotationLayer } from "@/AnnotationLayer"
 import { ErrorStatus, LoadingStatus } from "@/components"
@@ -20,17 +20,13 @@ export function InfinityPage({
 }: InfinityPageProps) {
 	const [viewport, setViewport] = useState<PageViewport>()
 
-	const isRenderingInProgress = useRef(false)
-
 	const { status, setStatus, pdf } = useViewerContext()
 
 	useEffect(() => {
-		if (!pdf || isRenderingInProgress.current) return
+		if (!pdf) return
 
 		const loadPage = async () => {
 			try {
-				isRenderingInProgress.current = true
-
 				const pages: PDFPageProxy[] = []
 
 				Array.from({ length: pdf.numPages }).forEach(async (_, index) => {
@@ -61,8 +57,6 @@ export function InfinityPage({
 					setViewport(pageViewport)
 
 					pages.push(page)
-
-					isRenderingInProgress.current = false
 				})
 
 				onPageLoad && onPageLoad(pages, pdf)
