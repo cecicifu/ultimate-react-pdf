@@ -4,6 +4,8 @@
 
 The most complete React PDF viewer for everyone, without dependencies and fully typed.
 
+<a href="https://codesandbox.io/p/sandbox/ultimate-react-pdf-g72ycj" target="_blank">Demo</a>
+
 ![demo](https://github.com/user-attachments/assets/d1b0442a-f75f-4e72-8d70-b1719ff16e42)
 
 ## Requirements
@@ -54,7 +56,7 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 
 | Prop name           | Description                                                                                                                   | Default value                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| src                 | The PDF file (could be in base64 format, a URL, etc.).                                                                        |                                            |
+| src                 | The PDF itself. Can be a URL where a PDF file is located, a typed array (Uint8Array) already populated with data, or a parameter object. </br></br>**NOTE**: If a URL is used to fetch the PDF data a standard Fetch API call (or XHR as fallback) is used, which means it must follow same origin rules. e.g. no cross-domain requests without CORS.                                                                                                                                                 |                                            |
 | documentRef         | Reference to the inner HTML element of the document.                                                                          |                                            |
 | externalLinkTarget  | Link rel for links rendered in annotations.                                                                                   |                                            |
 | externalLinkRel     | Link target for external links rendered in annotations.                                                                       |                                            |
@@ -67,11 +69,11 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 
 | Prop name           | Description                                                                                                                   | Default value                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| canvasRef           | Reference to the inner HTML element of the canvas.                                                                            |                                            |
 | controls            | Show or hide the control buttons.                                                                                             | `false`                                    | 
 | initialPage         | Initial page number.                                                                                                          | `1`                                        |
 | pageRef             | Reference to the inner HTML element of the page.                                                                              |                                            |
 | viewPortScale       | Custom viewport scale.                                                                                                        | `window.devicePixelRatio`                  |
+| annotations         | Enable or disable the annotations.                                                                                            | `true`                                     |
 | onPageChange        | Function called when the page changes.                                                                                        |                                            |
 | onPageError         | Function called when the page loads fails.                                                                                    |                                            |
 | onPageLoad          | Function called when the page loads successfully.                                                                             |                                            |
@@ -81,9 +83,9 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 
 | Prop name           | Description                                                                                                                   | Default value                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| canvasRef           | Reference to the inner HTML element of the canvas.                                                                            |                                            |
 | pageRef             | Reference to the inner HTML element of the page.                                                                              |                                            |
 | viewPortScale       | Function called when the document load fails.                                                                                 | `window.devicePixelRatio`                  |
+| annotations         | Enable or disable the annotations.                                                                                            | `true`                                     |
 | onPageError         | Function called when the page loads fails.                                                                                    |                                            |
 | onPageLoad          | Function called when the page loads successfully.                                                                             |                                            |
 | className           | Custom classname for the page container.                                                                                      |                                            |
