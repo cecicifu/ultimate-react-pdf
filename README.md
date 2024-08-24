@@ -6,8 +6,6 @@ The most complete React PDF viewer for everyone, without dependencies and fully 
 
 ![demo](https://github.com/user-attachments/assets/d1b0442a-f75f-4e72-8d70-b1719ff16e42)
 
----
-
 ## Requirements
 
 **React 16** or later.
