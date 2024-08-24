@@ -4,9 +4,7 @@
 
 The most complete React PDF viewer for everyone, without dependencies and fully typed.
 
-<div align="center">
-  <img src="https://github.com/cecicifu/ultimate-react-pdf/assets/15237067/825ff5a4-388a-4c90-b3d9-4acd5d75468b">
-</div>
+![demo](https://github.com/user-attachments/assets/d1b0442a-f75f-4e72-8d70-b1719ff16e42)
 
 ---
 
