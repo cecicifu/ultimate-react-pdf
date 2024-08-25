@@ -1,4 +1,4 @@
-import type { getDocument, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
+import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type {
 	DocumentInitParameters,
 	RefProxy,
