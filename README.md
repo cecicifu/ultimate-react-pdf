@@ -32,7 +32,7 @@ yarn add ultimate-react-pdf
 import { Document, Page } from "ultimate-react-pdf"
 
 <>
-  <Document src={{ data: atob("JVBERi0xLjcKJeLjz9MKOSAwIG...") }}>
+  <Document src={"https://pdfobject.com/pdf/sample.pdf"}>
     <Page controls />
   </Document>
 </>
@@ -44,7 +44,7 @@ Or for infinity page:
 import { Document, InfinityPage } from "ultimate-react-pdf"
 
 <>
-  <Document src={{ data: atob("JVBERi0xLjcKJeLjz9MKOSAwIG...") }}>
+  <Document src={"https://pdfobject.com/pdf/sample.pdf"}>
     <InfinityPage />
   </Document>
 </>
