@@ -10,7 +10,7 @@ import { examplePdf } from "./example"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<Document src={{ data: atob(examplePdf) }}>
+		<Document src={examplePdf}>
 			<Page controls />
 		</Document>
 	</StrictMode>

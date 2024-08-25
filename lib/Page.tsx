@@ -9,6 +9,7 @@ import { useViewerContext } from "@/hooks/useViewerContext"
 import type { PageProps } from "@/types"
 
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
+import { isWindowDefined } from "./utils"
 
 export function Page({
 	className,
@@ -16,7 +17,7 @@ export function Page({
 	initialPage = 1,
 	annotations = true,
 	pageRef,
-	viewPortScale = typeof window !== "undefined" ? window.devicePixelRatio : 1,
+	viewPortScale = isWindowDefined ? window.devicePixelRatio : 1,
 	onPageChange,
 	onPageError,
 	onPageLoad,
@@ -81,7 +82,8 @@ export function Page({
 		viewPortScale,
 	])
 
-	if (!pdf) return null
+	if (!pdf && status === STATUS.LOADING) return <LoadingStatus />
+	if (!pdf && status === STATUS.ERROR) return <ErrorStatus />
 
 	return (
 		<div className="pdf-viewer__container">
@@ -92,9 +94,6 @@ export function Page({
 					onPageChange={onPageChange}
 				/>
 			)}
-
-			{status === STATUS.LOADING && <LoadingStatus />}
-			{status === STATUS.ERROR && <ErrorStatus />}
 
 			<div
 				ref={pageRef}

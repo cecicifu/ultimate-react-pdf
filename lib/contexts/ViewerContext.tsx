@@ -1,6 +1,7 @@
 import {
 	getDocument,
 	GlobalWorkerOptions,
+	type PDFDocumentLoadingTask,
 	type PDFDocumentProxy,
 } from "pdfjs-dist"
 import { createContext, useEffect, useRef, useState } from "react"
@@ -8,6 +9,7 @@ import { createContext, useEffect, useRef, useState } from "react"
 import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
 import type { Status, ViewerContextProps, ViewerProviderProps } from "@/types"
+import { isValidUrl, isWindowDefined } from "@/utils"
 
 import workerContent from "./build/pdf.worker.min.mjs.json"
 
@@ -27,20 +29,48 @@ export const PdfViewerProvider = ({
 	onDocumentError,
 	onDocumentLoad,
 	messages,
+	options = {},
 }: ViewerProviderProps) => {
 	const [status, setStatus] = useState<Status>(STATUS.LOADING)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
-	const isTaskInProgress = useRef(false)
+	const isTaskInProgress = useRef<PDFDocumentLoadingTask>()
 
 	useEffect(() => {
 		if (pdf || isTaskInProgress.current) return
 
 		const loadDocument = async () => {
 			try {
-				isTaskInProgress.current = true
+				if (typeof src === "string") {
+					if (isValidUrl(src)) {
+						isTaskInProgress.current = getDocument({
+							url: src,
+							verbosity: 0,
+							...options,
+						})
+					}
 
-				const pdfLoaded = await getDocument(src).promise
+					if (!isValidUrl(src)) {
+						isTaskInProgress.current = getDocument({
+							data: isWindowDefined ? window.atob(src) : src,
+							verbosity: 0,
+							...options,
+						})
+					}
+				}
+
+				if (src instanceof URL) {
+					isTaskInProgress.current = getDocument({
+						url: src,
+						verbosity: 0,
+						...options,
+					})
+				}
+
+				if (!isTaskInProgress.current)
+					throw new UltimateReactPdfError("Unsupported source")
+
+				const pdfLoaded = await isTaskInProgress.current.promise
 
 				onDocumentLoad && onDocumentLoad(pdfLoaded)
 
@@ -52,13 +82,11 @@ export const PdfViewerProvider = ({
 				setStatus(STATUS.ERROR)
 
 				throw error
-			} finally {
-				isTaskInProgress.current = false
 			}
 		}
 
 		loadDocument()
-	}, [src, pdf, onDocumentError, onDocumentLoad])
+	}, [src, pdf, onDocumentError, onDocumentLoad, options])
 
 	return (
 		<ViewerContext.Provider

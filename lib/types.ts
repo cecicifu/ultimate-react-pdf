@@ -1,5 +1,8 @@
 import type { getDocument, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
-import type { RefProxy } from "pdfjs-dist/types/src/display/api"
+import type {
+	DocumentInitParameters,
+	RefProxy,
+} from "pdfjs-dist/types/src/display/api"
 import type { ComponentProps, RefObject } from "react"
 
 import type { STATUS } from "@/constants"
@@ -23,6 +26,7 @@ export interface ViewerProviderProps
 		| "externalLinkTarget"
 		| "externalLinkRel"
 		| "messages"
+		| "options"
 	> {
 	children: React.ReactNode
 }
@@ -46,6 +50,7 @@ export interface DocumentProps {
 	onDocumentError?: (error: unknown) => void
 	onDocumentLoad?: (document: PDFDocumentProxy | undefined) => void
 	messages?: Messages
+	options?: Omit<DocumentInitParameters, "url" | "data" | "verbosity">
 }
 
 export interface PageCommonProps {
