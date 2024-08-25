@@ -32,7 +32,7 @@ yarn add ultimate-react-pdf
 import { Document, Page } from "ultimate-react-pdf"
 
 <>
-  <Document src={"https://pdfobject.com/pdf/sample.pdf"}>
+  <Document src="https://pdfobject.com/pdf/sample.pdf">
     <Page controls />
   </Document>
 </>
@@ -44,7 +44,7 @@ Or for infinity page:
 import { Document, InfinityPage } from "ultimate-react-pdf"
 
 <>
-  <Document src={"https://pdfobject.com/pdf/sample.pdf"}>
+  <Document src={new URL("https://pdfobject.com/pdf/sample.pdf")}>
     <InfinityPage />
   </Document>
 </>
@@ -56,7 +56,7 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 
 | Prop name           | Description                                                                                                                   | Default value                              |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| src                 | The PDF itself. Can be a URL where a PDF file is located or a base64 format. </br></br>**NOTE**: If a URL is used to fetch the PDF data a standard Fetch API call (or XHR as fallback) is used, which means it must follow same origin rules. e.g. no cross-domain requests without CORS.                                                                                                                                                 |                                            |
+| src                 | The PDF itself. Can be a URL string where a PDF file is located or a base64 string. </br></br>**NOTE**: If a URL is used to fetch the PDF data a standard Fetch API call (or XHR as fallback) is used, which means it must follow same origin rules. e.g. no cross-domain requests without CORS.                                                                                                                                                 |                                            |
 | options             | Some extra options such as password, headers..                                                                                | `{}`                                       |
 | documentRef         | Reference to the inner HTML element of the document.                                                                          |                                            |
 | externalLinkTarget  | Link rel for links rendered in annotations.                                                                                   |                                            |
