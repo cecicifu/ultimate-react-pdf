@@ -41,7 +41,7 @@ export type Messages = {
 
 export interface DocumentProps {
 	children: React.ReactNode
-	src: DocumentSrc
+	src: string | URL
 	locale?: string
 	className?: string
 	documentRef?: RefObject<HTMLDivElement>
@@ -79,8 +79,6 @@ export interface ControlsProps extends Pick<PageProps, "onPageChange"> {
 	pageNumber: Page
 	setPage: (page: Page) => void
 }
-
-export type DocumentSrc = NonNullable<Parameters<typeof getDocument>[0]>
 
 export type Status = (typeof STATUS)[keyof typeof STATUS]
 
