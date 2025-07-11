@@ -1,7 +1,11 @@
 import { useViewerContext } from "@/hooks/useViewerContext"
 import type { ControlsProps } from "@/types"
 
-export function Controls({ pageNumber, setPage, onPageChange }: ControlsProps) {
+export const Controls = ({
+	pageNumber,
+	setPage,
+	onPageChange,
+}: ControlsProps) => {
 	const { pdf, messages } = useViewerContext()
 
 	const handlePrev = async () => {

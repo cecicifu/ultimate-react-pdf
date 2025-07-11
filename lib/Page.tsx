@@ -11,7 +11,7 @@ import type { PageProps } from "@/types"
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
 import { isWindowDefined } from "./utils"
 
-export function Page({
+export const Page = ({
 	className,
 	controls = false,
 	initialPage = 1,
@@ -21,7 +21,7 @@ export function Page({
 	onPageChange,
 	onPageError,
 	onPageLoad,
-}: PageProps) {
+}: PageProps) => {
 	const [currentPage, setCurrentPage] = useState(initialPage)
 	const [viewport, setViewport] = useState<PageViewport>()
 

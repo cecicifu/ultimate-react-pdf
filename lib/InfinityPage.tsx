@@ -10,14 +10,14 @@ import type { InfinityPageProps } from "@/types"
 
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
 
-export function InfinityPage({
+export const InfinityPage = ({
 	className,
 	pageRef,
 	annotations = true,
 	viewPortScale = window.devicePixelRatio,
 	onPageError,
 	onPageLoad,
-}: InfinityPageProps) {
+}: InfinityPageProps) => {
 	const [viewport, setViewport] = useState<PageViewport>()
 
 	const { status, setStatus, pdf } = useViewerContext()
