@@ -1,4 +1,4 @@
-![version](https://img.shields.io/npm/v/ultimate-react-pdf/latest) ![downloads](https://img.shields.io/npm/dt/ultimate-react-pdf) ![minzipsize](https://img.shields.io/bundlephobia/minzip/ultimate-react-pdf/latest) ![license](https://img.shields.io/github/license/cecicifu/ultimate-react-pdf)
+![version](https://img.shields.io/npm/v/ultimate-react-pdf/latest) ![downloads](https://img.shields.io/npm/dt/ultimate-react-pdf) ![license](https://img.shields.io/github/license/cecicifu/ultimate-react-pdf)
 
 # Ultimate React PDF
 
