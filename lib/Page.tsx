@@ -17,7 +17,7 @@ export const Page = ({
 	initialPage = 1,
 	annotations = true,
 	pageRef,
-	viewPortScale = isWindowDefined ? window.devicePixelRatio : 1,
+	viewPortScale,
 	onPageChange,
 	onPageError,
 	onPageLoad,
@@ -27,7 +27,10 @@ export const Page = ({
 
 	const { status, setStatus, pdf } = useViewerContext()
 
-	const showControls = controls && status === STATUS.READY
+	const showControls = controls && status === STATUS.ready
+
+	const dpr = isWindowDefined ? window.devicePixelRatio : 1
+	const scale = viewPortScale ?? dpr
 
 	useEffect(() => {
 		if (!pdf) return
@@ -36,7 +39,7 @@ export const Page = ({
 			try {
 				const page = await pdf.getPage(currentPage)
 
-				const pageViewport = page.getViewport({ scale: viewPortScale })
+				const pageViewport = page.getViewport({ scale })
 
 				const canvas = document.querySelector<HTMLCanvasElement>(
 					`#page-${currentPage}`
@@ -57,36 +60,24 @@ export const Page = ({
 				await page.render(renderContext).promise
 
 				setViewport(pageViewport)
-
-				onPageLoad && onPageLoad(page, pdf)
-
-				setStatus(STATUS.READY)
+				onPageLoad?.(page, pdf)
+				setStatus(STATUS.ready)
 			} catch (error) {
 				if (error instanceof UltimateReactPdfError) console.error(error.message)
 
-				onPageError && onPageError(error, pdf)
-				setStatus(STATUS.ERROR)
-
-				throw error
+				onPageError?.(error, pdf)
+				setStatus(STATUS.error)
 			}
 		}
 
 		loadPage()
-	}, [
-		currentPage,
-		onPageError,
-		onPageLoad,
-		initialPage,
-		pdf,
-		setStatus,
-		viewPortScale,
-	])
+	}, [currentPage, onPageError, onPageLoad, pdf, viewPortScale])
 
-	if (!pdf && status === STATUS.LOADING) return <LoadingStatus />
-	if (!pdf && status === STATUS.ERROR) return <ErrorStatus />
+	if (!pdf && status === STATUS.loading) return <LoadingStatus />
+	if (!pdf && status === STATUS.error) return <ErrorStatus />
 
 	return (
-		<div className="pdf-viewer__container">
+		<div className="pdf-viewer__container" role="region" aria-label="PDF Page">
 			{showControls && (
 				<Controls
 					pageNumber={currentPage}

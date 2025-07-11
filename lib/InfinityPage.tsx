@@ -9,18 +9,22 @@ import { useViewerContext } from "@/hooks/useViewerContext"
 import type { InfinityPageProps } from "@/types"
 
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
+import { isWindowDefined } from "./utils"
 
 export const InfinityPage = ({
 	className,
 	pageRef,
 	annotations = true,
-	viewPortScale = window.devicePixelRatio,
+	viewPortScale,
 	onPageError,
 	onPageLoad,
 }: InfinityPageProps) => {
-	const [viewport, setViewport] = useState<PageViewport>()
+	const [viewports, setViewports] = useState<PageViewport[]>([])
 
 	const { status, setStatus, pdf } = useViewerContext()
+
+	const dpr = isWindowDefined ? window.devicePixelRatio : 1
+	const scale = viewPortScale ?? dpr
 
 	useEffect(() => {
 		if (!pdf) return
@@ -28,61 +32,64 @@ export const InfinityPage = ({
 		const loadPage = async () => {
 			try {
 				const pages: PDFPageProxy[] = []
+				const newViewports: PageViewport[] = []
 
-				Array.from({ length: pdf.numPages }).forEach(async (_, index) => {
-					const currentPage = index + 1
+				await Promise.all(
+					Array.from({ length: pdf.numPages }).map(async (_, index) => {
+						const currentPage = index + 1
 
-					const page = await pdf.getPage(currentPage)
+						const page = await pdf.getPage(currentPage)
 
-					const pageViewport = page.getViewport({ scale: viewPortScale })
+						const pageViewport = page.getViewport({ scale })
 
-					const canvas = document.querySelector<HTMLCanvasElement>(
-						`#page-${currentPage}`
-					)
-					if (!canvas) throw new UltimateReactPdfError("Canvas not found")
+						const canvas = document.querySelector<HTMLCanvasElement>(
+							`#page-${currentPage}`
+						)
+						if (!canvas) throw new UltimateReactPdfError("Canvas not found")
 
-					const context = canvas.getContext("2d")
-					if (!context) throw new UltimateReactPdfError("Context not found")
+						if (!canvas) throw new UltimateReactPdfError("Canvas not found")
 
-					canvas.height = pageViewport.height
-					canvas.width = pageViewport.width
+						const context = canvas.getContext("2d")
+						if (!context) throw new UltimateReactPdfError("Context not found")
 
-					const renderContext: RenderParameters = {
-						canvasContext: context,
-						viewport: pageViewport,
-					}
+						canvas.height = pageViewport.height
+						canvas.width = pageViewport.width
 
-					await page.render(renderContext).promise
+						const renderContext: RenderParameters = {
+							canvasContext: context,
+							viewport: pageViewport,
+						}
 
-					setViewport(pageViewport)
+						await page.render(renderContext).promise
 
-					pages.push(page)
-				})
+						newViewports[index] = pageViewport
+						pages[index] = page
+					})
+				)
 
-				onPageLoad && onPageLoad(pages, pdf)
-
-				setStatus(STATUS.READY)
+				setViewports(newViewports)
+				onPageLoad?.(pages, pdf)
+				setStatus(STATUS.ready)
 			} catch (error) {
 				if (error instanceof Error) console.error(error.message)
 
-				onPageError && onPageError(error, pdf)
-				setStatus(STATUS.ERROR)
-
-				throw error
+				onPageError?.(error, pdf)
+				setStatus(STATUS.error)
 			}
 		}
 
 		loadPage()
-	}, [onPageError, onPageLoad, pdf, setStatus, viewPortScale])
+	}, [onPageError, onPageLoad, pdf, viewPortScale])
 
 	return (
-		<div className="pdf-viewer__container">
-			{status === STATUS.LOADING && <LoadingStatus />}
-			{status === STATUS.ERROR && <ErrorStatus />}
+		<div className="pdf-viewer__container" role="region" aria-label="PDF Page">
+			{status === STATUS.loading && <LoadingStatus />}
+			{status === STATUS.error && <ErrorStatus />}
 
 			{pdf &&
 				Array.from({ length: pdf.numPages }).map((_, index) => {
 					const page = index + 1
+					const pageViewport = viewports[index]
 
 					return (
 						<div
@@ -92,8 +99,8 @@ export const InfinityPage = ({
 								className ? `${className} pdf-viewer__page` : "pdf-viewer__page"
 							}
 							style={{
-								height: viewport?.height,
-								width: viewport?.width,
+								height: pageViewport?.height,
+								width: pageViewport?.width,
 							}}
 						>
 							<canvas className="pdf-viewer__canvas" id={`page-${page}`} />

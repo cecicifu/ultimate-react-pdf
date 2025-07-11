@@ -8,42 +8,50 @@ export const Controls = ({
 }: ControlsProps) => {
 	const { pdf, messages } = useViewerContext()
 
-	const handlePrev = async () => {
-		if (!pdf) return
+	const handlePrevious = async () => {
+		if (!pdf || pageNumber <= 1) return
 
 		const prevPage = pageNumber - 1
 
-		const page = await pdf?.getPage(prevPage)
+		const page = await pdf.getPage(prevPage)
 
-		onPageChange && onPageChange(page, pdf)
+		onPageChange?.(page, pdf)
 		setPage(prevPage)
 	}
 
 	const handleNext = async () => {
-		if (!pdf) return
+		if (!pdf || pageNumber >= pdf.numPages) return
 
 		const nextPage = pageNumber + 1
 
-		const page = await pdf?.getPage(nextPage)
+		const page = await pdf.getPage(nextPage)
 
-		onPageChange && onPageChange(page, pdf)
+		onPageChange?.(page, pdf)
 		setPage(nextPage)
 	}
 
 	return (
 		<div className="pdf-viewer__controls">
 			<div className="pdf-viewer__controls__buttons">
-				<button onClick={handlePrev} disabled={pageNumber === 1}>
+				<button
+					onClick={handlePrevious}
+					disabled={pageNumber === 1}
+					aria-label={messages?.previousButton || "Previous page"}
+				>
 					{messages?.previousButton}
 				</button>
-				<button onClick={handleNext} disabled={pdf?.numPages === pageNumber}>
+				<button
+					onClick={handleNext}
+					disabled={pageNumber >= (pdf?.numPages ?? 1)}
+					aria-label={messages?.nextButton || "Next page"}
+				>
 					{messages?.nextButton}
 				</button>
 			</div>
 
-			<div className="pdf-viewer_controls_num-pages">
+			<div className="pdf-viewer__controls__num-pages">
 				<span>
-					{pageNumber} {messages?.numPagesSeparator} {pdf?.numPages}
+					{pageNumber} {messages?.numPagesSeparator} {pdf?.numPages ?? 0}
 				</span>
 			</div>
 		</div>
