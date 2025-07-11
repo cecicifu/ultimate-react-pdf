@@ -4,12 +4,12 @@ import {
 	type PDFDocumentLoadingTask,
 	type PDFDocumentProxy,
 } from "pdfjs-dist"
-import { createContext, useEffect, useRef, useState } from "react"
+import { createContext, useEffect, useMemo, useRef, useState } from "react"
 
 import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
 import type { Status, ViewerContextProps, ViewerProviderProps } from "@/types"
-import { isValidUrl, isWindowDefined } from "@/utils"
+import { decodeBase64ToUint8Array, isValidUrl } from "@/utils"
 
 import workerContent from "./build/pdf.worker.min.mjs.json"
 
@@ -29,41 +29,35 @@ export const PdfViewerProvider = ({
 	onDocumentError,
 	onDocumentLoad,
 	messages,
-	options = {},
+	options,
 }: ViewerProviderProps) => {
-	const [status, setStatus] = useState<Status>(STATUS.LOADING)
+	const [status, setStatus] = useState<Status>(STATUS.loading)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
 	const isTaskInProgress = useRef<PDFDocumentLoadingTask>()
+
+	const defaultOptions = useMemo(() => options, [options])
 
 	useEffect(() => {
 		if (pdf || isTaskInProgress.current) return
 
 		const loadDocument = async () => {
 			try {
-				if (typeof src === "string") {
-					if (isValidUrl(src)) {
-						isTaskInProgress.current = getDocument({
-							url: src,
-							verbosity: 0,
-							...options,
-						})
-					}
+				const isUrl = isValidUrl(src)
 
-					if (!isValidUrl(src)) {
-						isTaskInProgress.current = getDocument({
-							data: isWindowDefined ? window.atob(src) : src,
-							verbosity: 0,
-							...options,
-						})
-					}
-				}
-
-				if (src instanceof URL) {
+				if (isUrl) {
 					isTaskInProgress.current = getDocument({
 						url: src,
 						verbosity: 0,
-						...options,
+						...defaultOptions,
+					})
+				}
+
+				if (!isUrl) {
+					isTaskInProgress.current = getDocument({
+						data: decodeBase64ToUint8Array(src),
+						verbosity: 0,
+						...defaultOptions,
 					})
 				}
 
@@ -72,21 +66,18 @@ export const PdfViewerProvider = ({
 
 				const pdfLoaded = await isTaskInProgress.current.promise
 
-				onDocumentLoad && onDocumentLoad(pdfLoaded)
-
+				onDocumentLoad?.(pdfLoaded)
 				setPdf(pdfLoaded)
 			} catch (error) {
 				if (error instanceof UltimateReactPdfError) console.error(error.message)
 
-				onDocumentError && onDocumentError(error)
-				setStatus(STATUS.ERROR)
-
-				throw error
+				onDocumentError?.(error)
+				setStatus(STATUS.error)
 			}
 		}
 
 		loadDocument()
-	}, [src, pdf, onDocumentError, onDocumentLoad, options])
+	}, [src, onDocumentError, onDocumentLoad, defaultOptions])
 
 	return (
 		<ViewerContext.Provider

@@ -35,13 +35,13 @@ export type Messages = {
 	nextButton?: string
 	previousButton?: string
 	numPagesSeparator?: string
-	loading?: string
-	error?: string
+	loading?: React.ReactNode
+	error?: React.ReactNode
 }
 
 export interface DocumentProps {
 	children: React.ReactNode
-	src: string | URL
+	src: string
 	locale?: string
 	className?: string
 	documentRef?: RefObject<HTMLDivElement>
