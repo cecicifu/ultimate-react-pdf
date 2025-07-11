@@ -12,6 +12,7 @@ module.exports = {
 	rules: {
 		"simple-import-sort/imports": "warn",
 		"@typescript-eslint/no-unused-vars": "warn",
+		"react-hooks/exhaustive-deps": "off",
 		"react-refresh/only-export-components": [
 			"warn",
 			{ allowConstantExport: true },
