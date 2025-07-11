@@ -4,7 +4,7 @@
 
 The most complete React PDF viewer for everyone, without dependencies and fully typed.
 
-<a href="https://codesandbox.io/p/sandbox/ultimate-react-pdf-g72ycj" target="_blank">Demo</a>
+[Demo](https://codesandbox.io/p/sandbox/ultimate-react-pdf-g72ycj){:target="_blank"}
 
 ![demo](https://github.com/user-attachments/assets/d1b0442a-f75f-4e72-8d70-b1719ff16e42)
 
@@ -38,13 +38,13 @@ import { Document, Page } from "ultimate-react-pdf"
 </>
 ```
 
-Or for infinity page:
+Or for infinite scrolling:
 
 ```jsx
 import { Document, InfinityPage } from "ultimate-react-pdf"
 
 <>
-  <Document src={new URL("https://pdfobject.com/pdf/sample.pdf")}>
+  <Document src="https://pdfobject.com/pdf/sample.pdf">
     <InfinityPage />
   </Document>
 </>
@@ -93,4 +93,4 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 
 ## License
 
-Under [MIT](https://github.com/cecicifu/ultimate-react-pdf/blob/main/LICENSE) License.
+Under [MIT](https://github.com/cecicifu/ultimate-react-pdf/blob/main/LICENSE){:target="_blank"} License.
