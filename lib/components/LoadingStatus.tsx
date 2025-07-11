@@ -1,7 +1,7 @@
 import { useViewerContext } from "@/hooks/useViewerContext"
 
-export function LoadingStatus() {
+export const LoadingStatus = () => {
 	const { messages } = useViewerContext()
 
-	return <p className="pdf-viewer__status">{messages?.loading}</p>
+	return <p className="pdf-viewer__loading">{messages?.loading}</p>
 }
