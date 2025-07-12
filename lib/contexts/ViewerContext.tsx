@@ -16,7 +16,8 @@ import workerContent from "./build/pdf.worker.min.mjs.json"
 const workerBlob = new Blob([workerContent as BlobPart], {
 	type: "text/javascript",
 })
-const workerBlobURL = URL.createObjectURL(workerBlob)
+const workerBlobURL = window.URL.createObjectURL(workerBlob)
+
 GlobalWorkerOptions.workerSrc = workerBlobURL
 
 export const ViewerContext = createContext<ViewerContextProps | null>(null)
@@ -34,7 +35,7 @@ export const PdfViewerProvider = ({
 	const [status, setStatus] = useState<Status>(STATUS.loading)
 	const [pdf, setPdf] = useState<PDFDocumentProxy>()
 
-	const isTaskInProgress = useRef<PDFDocumentLoadingTask>()
+	const isTaskInProgress = useRef<PDFDocumentLoadingTask>(null)
 
 	const defaultOptions = useMemo(() => options, [options])
 
