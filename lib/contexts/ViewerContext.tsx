@@ -9,7 +9,7 @@ import { createContext, useEffect, useMemo, useRef, useState } from "react"
 import UltimateReactPdfError from "@/components/UltimateReactPdfError"
 import { STATUS } from "@/constants"
 import type { Status, ViewerContextProps, ViewerProviderProps } from "@/types"
-import { decodeBase64ToUint8Array, isValidUrl } from "@/utils"
+import { decodeBase64ToUint8Array, isBase64, isValidUrl } from "@/utils"
 
 import workerContent from "./build/pdf.worker.min.mjs.json"
 
@@ -45,7 +45,8 @@ export const PdfViewerProvider = ({
 			try {
 				const isUrl = isValidUrl(src)
 
-				if (isUrl) {
+				if (isUrl || !isBase64(src)) {
+					// URL or non-base64 string imported
 					isTaskInProgress.current = getDocument({
 						url: src,
 						verbosity: 0,
@@ -53,7 +54,8 @@ export const PdfViewerProvider = ({
 					})
 				}
 
-				if (!isUrl) {
+				if (!isUrl && isBase64(src)) {
+					// base64 string imported
 					isTaskInProgress.current = getDocument({
 						data: decodeBase64ToUint8Array(src),
 						verbosity: 0,
@@ -61,10 +63,13 @@ export const PdfViewerProvider = ({
 					})
 				}
 
-				if (!isTaskInProgress.current)
+				if (!isTaskInProgress.current) {
 					throw new UltimateReactPdfError("Unsupported source")
+				}
 
-				const pdfLoaded = await isTaskInProgress.current.promise
+				const pdfLoaded = await isTaskInProgress.current.promise.catch(() => {
+					throw new UltimateReactPdfError("Invalid PDF structure")
+				})
 
 				onDocumentLoad?.(pdfLoaded)
 				setPdf(pdfLoaded)

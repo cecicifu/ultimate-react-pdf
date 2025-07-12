@@ -37,14 +37,41 @@ export const decodeBase64ToUint8Array = (base64: string): Uint8Array => {
  * @returns true if the URL is valid, false otherwise.
  */
 export const isValidUrl = (url: string) => {
-	if (URL.canParse !== undefined) {
+	// Check if URL.canParse is available (modern browsers)
+	if (typeof URL.canParse === "function") {
 		return URL.canParse(url)
 	}
 
-	// fallback for older browsers versions
+	// Fallback for older browser versions
 	try {
 		new URL(url)
 		return true
+	} catch {
+		return false
+	}
+}
+
+/**
+ * Checks if a string is a valid Base64 encoded string.
+ * @param str - The base64 string to check.
+ * @returns true if the string is Base64 encoded, false otherwise.
+ */
+export const isBase64 = (str: string) => {
+	try {
+		if (isWindowDefined) {
+			// Browser environment
+			const decoded = window.atob(str)
+			const reencoded = window.btoa(decoded)
+			return reencoded === str
+		}
+
+		if (!isWindowDefined) {
+			// Node.js environment
+			const reencoded = Buffer.from(str, "base64").toString("base64")
+			return reencoded === str
+		}
+
+		return false
 	} catch {
 		return false
 	}
