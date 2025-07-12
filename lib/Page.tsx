@@ -77,6 +77,7 @@ export const Page = ({
 			>
 				<canvas
 					className="pdf-viewer__canvas"
+					data-testid={`page-canvas-${currentPage}`}
 					id={`page-${currentPage}`}
 					style={{ width: "100%", height: "auto" }}
 				/>
