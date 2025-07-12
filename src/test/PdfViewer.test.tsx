@@ -1,9 +1,11 @@
-import { Page } from "@/Page"
 import { render } from "@testing-library/react"
-import { Document } from "@/Document"
 import { describe, expect, it } from "vitest"
-import importedPdf from "../example.pdf"
+
+import { Document } from "@/Document"
+import { Page } from "@/Page"
+
 import { examplePdf } from "../example"
+import importedPdf from "../example.pdf"
 
 describe("PdfViewer", () => {
 	it("should render with a URL", async () => {

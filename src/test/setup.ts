@@ -1,10 +1,12 @@
 import "@testing-library/jest-dom"
-import workerContent from "../../lib/contexts/build/pdf.worker.min.mjs.json"
-import { GlobalWorkerOptions } from "pdfjs-dist"
+
 import fs from "node:fs"
 import path from "node:path"
 
+import { GlobalWorkerOptions } from "pdfjs-dist"
 import { vi } from "vitest"
+
+import workerContent from "../../lib/contexts/build/pdf.worker.min.mjs.json"
 
 // Mock GlobalWorkerOptions
 vi.mock("pdfjs-dist", async () => {
