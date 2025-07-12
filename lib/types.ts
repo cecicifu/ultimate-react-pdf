@@ -3,7 +3,6 @@ import type {
 	DocumentInitParameters,
 	RefProxy,
 } from "pdfjs-dist/types/src/display/api"
-import type { ComponentProps, RefObject } from "react"
 
 import type { STATUS } from "@/constants"
 
@@ -44,9 +43,9 @@ export interface DocumentProps {
 	src: string
 	locale?: string
 	className?: string
-	documentRef?: RefObject<HTMLDivElement>
-	externalLinkTarget?: ComponentProps<"a">["href"]
-	externalLinkRel?: ComponentProps<"a">["rel"]
+	documentRef?: React.MutableRefObject<HTMLDivElement | null>
+	externalLinkTarget?: React.ComponentProps<"a">["href"]
+	externalLinkRel?: React.ComponentProps<"a">["rel"]
 	onDocumentError?: (error: unknown) => void
 	onDocumentLoad?: (document: PDFDocumentProxy | undefined) => void
 	messages?: Messages
@@ -56,7 +55,7 @@ export interface DocumentProps {
 export interface PageCommonProps {
 	annotations?: boolean
 	className?: string
-	pageRef?: React.RefObject<HTMLDivElement>
+	pageRef?: React.MutableRefObject<HTMLDivElement | null>
 	viewPortScale?: number
 	onPageError?: (error: unknown, document: PDFDocumentProxy) => void
 }

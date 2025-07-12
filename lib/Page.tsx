@@ -1,15 +1,17 @@
-import type { PageViewport } from "pdfjs-dist"
-import type { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { AnnotationLayer } from "@/AnnotationLayer"
 import { Controls, ErrorStatus, LoadingStatus } from "@/components"
 import { STATUS } from "@/constants"
-import { useViewerContext } from "@/hooks/useViewerContext"
+import {
+	useContainerResize,
+	useDevicePixelRatio,
+	usePageRenderer,
+	usePageScale,
+	useRefCallback,
+	useViewerContext,
+} from "@/hooks"
 import type { PageProps } from "@/types"
-
-import UltimateReactPdfError from "./components/UltimateReactPdfError"
-import { isWindowDefined } from "./utils"
 
 export const Page = ({
 	className,
@@ -23,55 +25,32 @@ export const Page = ({
 	onPageLoad,
 }: PageProps) => {
 	const [currentPage, setCurrentPage] = useState(initialPage)
-	const [viewport, setViewport] = useState<PageViewport>()
 
 	const { status, setStatus, pdf } = useViewerContext()
+	const { containerRef, containerWidth } = useContainerResize()
+	const devicePixelRatio = useDevicePixelRatio()
+	const { getResponsiveScale } = usePageScale({
+		viewPortScale,
+		containerWidth,
+		devicePixelRatio,
+	})
+	const { setRefs } = useRefCallback({ pageRef })
+	const { viewport } = usePageRenderer({
+		pdf,
+		currentPage,
+		getResponsiveScale,
+		onPageLoad,
+		onPageError,
+		setStatus,
+	})
 
 	const showControls = controls && status === STATUS.ready
 
-	const dpr = isWindowDefined ? window.devicePixelRatio : 1
-	const scale = viewPortScale ?? dpr
-
-	useEffect(() => {
-		if (!pdf) return
-
-		const loadPage = async () => {
-			try {
-				const page = await pdf.getPage(currentPage)
-
-				const pageViewport = page.getViewport({ scale })
-
-				const canvas = document.querySelector<HTMLCanvasElement>(
-					`#page-${currentPage}`
-				)
-				if (!canvas) throw new UltimateReactPdfError("Canvas not found")
-
-				const context = canvas.getContext("2d")
-				if (!context) throw new UltimateReactPdfError("Context not found")
-
-				canvas.height = pageViewport.height
-				canvas.width = pageViewport.width
-
-				const renderContext: RenderParameters = {
-					canvasContext: context,
-					viewport: pageViewport,
-				}
-
-				await page.render(renderContext).promise
-
-				setViewport(pageViewport)
-				onPageLoad?.(page, pdf)
-				setStatus(STATUS.ready)
-			} catch (error) {
-				if (error instanceof UltimateReactPdfError) console.error(error.message)
-
-				onPageError?.(error, pdf)
-				setStatus(STATUS.error)
-			}
-		}
-
-		loadPage()
-	}, [currentPage, onPageError, onPageLoad, pdf, viewPortScale])
+	// Combine container ref with page ref
+	const handleRefCallback = (node: HTMLDivElement | null) => {
+		containerRef.current = node
+		setRefs(node)
+	}
 
 	if (!pdf && status === STATUS.loading) return <LoadingStatus />
 	if (!pdf && status === STATUS.error) return <ErrorStatus />
@@ -85,18 +64,22 @@ export const Page = ({
 					onPageChange={onPageChange}
 				/>
 			)}
-
 			<div
-				ref={pageRef}
+				ref={handleRefCallback}
 				className={
 					className ? `${className} pdf-viewer__page` : "pdf-viewer__page"
 				}
 				style={{
+					width: "100%",
 					height: viewport?.height,
-					width: viewport?.width,
+					maxWidth: viewport?.width,
 				}}
 			>
-				<canvas className="pdf-viewer__canvas" id={`page-${currentPage}`} />
+				<canvas
+					className="pdf-viewer__canvas"
+					id={`page-${currentPage}`}
+					style={{ width: "100%", height: "auto" }}
+				/>
 				{annotations && (
 					<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
 				)}
