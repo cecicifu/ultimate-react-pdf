@@ -20,6 +20,7 @@ const workerBlobURL = window.URL.createObjectURL(workerBlob)
 
 GlobalWorkerOptions.workerSrc = workerBlobURL
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ViewerContext = createContext<ViewerContextProps | null>(null)
 
 export const PdfViewerProvider = ({
