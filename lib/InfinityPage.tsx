@@ -49,8 +49,6 @@ export const InfinityPage = ({
 						)
 						if (!canvas) throw new UltimateReactPdfError("Canvas not found")
 
-						if (!canvas) throw new UltimateReactPdfError("Canvas not found")
-
 						const context = canvas.getContext("2d")
 						if (!context) throw new UltimateReactPdfError("Context not found")
 
