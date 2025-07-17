@@ -11,6 +11,7 @@ import {
 	useRefCallback,
 	useViewerContext,
 } from "@/hooks"
+import { TextLayer } from "@/TextLayer"
 import type { PageProps } from "@/types"
 
 export const Page = ({
@@ -18,6 +19,7 @@ export const Page = ({
 	controls = false,
 	initialPage = 1,
 	annotations = true,
+	textSelection = true,
 	pageRef,
 	viewPortScale,
 	onPageChange,
@@ -81,6 +83,9 @@ export const Page = ({
 					id={`page-${currentPage}`}
 					style={{ width: "100%", height: "auto" }}
 				/>
+				{textSelection && (
+					<TextLayer currentPage={currentPage} viewport={viewport} />
+				)}
 				{annotations && (
 					<AnnotationLayer currentPage={currentPage} setPage={setCurrentPage} />
 				)}

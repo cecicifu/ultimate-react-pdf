@@ -48,11 +48,3 @@ window.URL.createObjectURL = vi.fn()
 GlobalWorkerOptions.workerSrc = window.URL.createObjectURL(
 	new Blob([workerContent], { type: "text/javascript" })
 )
-
-global.ResizeObserver = class ResizeObserver {
-	observe() {}
-	unobserve() {}
-	disconnect() {}
-}
-
-Element.prototype.scrollIntoView = vi.fn()

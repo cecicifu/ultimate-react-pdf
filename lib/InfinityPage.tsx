@@ -6,6 +6,7 @@ import { AnnotationLayer } from "@/AnnotationLayer"
 import { ErrorStatus, LoadingStatus } from "@/components"
 import { STATUS } from "@/constants"
 import { useViewerContext } from "@/hooks/useViewerContext"
+import { TextLayer } from "@/TextLayer"
 import type { InfinityPageProps } from "@/types"
 
 import UltimateReactPdfError from "./components/UltimateReactPdfError"
@@ -15,6 +16,7 @@ export const InfinityPage = ({
 	className,
 	pageRef,
 	annotations = true,
+	textSelection = true,
 	viewPortScale,
 	onPageError,
 	onPageLoad,
@@ -104,6 +106,7 @@ export const InfinityPage = ({
 							}}
 						>
 							<canvas className="pdf-viewer__canvas" id={`page-${page}`} />
+							{textSelection && <TextLayer currentPage={page} />}
 							{annotations && (
 								<AnnotationLayer currentPage={page} infinity={true} />
 							)}

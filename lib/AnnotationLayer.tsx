@@ -149,6 +149,7 @@ export const AnnotationLayer = ({
 		<div
 			ref={annotationLayer}
 			className="pdf-viewer__annotations-layer"
+			data-testid={`annotation-layer-${currentPage}`}
 			id="annotations"
 		/>
 	)

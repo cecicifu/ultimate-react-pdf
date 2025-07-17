@@ -1,4 +1,4 @@
-import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
+import type { PageViewport, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist"
 import type {
 	DocumentInitParameters,
 	RefProxy,
@@ -54,6 +54,7 @@ export interface DocumentProps {
 
 export interface PageCommonProps {
 	annotations?: boolean
+	textSelection?: boolean
 	className?: string
 	pageRef?: React.MutableRefObject<HTMLDivElement | null>
 	viewPortScale?: number
@@ -87,6 +88,11 @@ export interface AnnotationLayerProps {
 	currentPage: Page
 	setPage?: (page: number) => void
 	infinity?: boolean
+}
+
+export interface TextLayerProps {
+	currentPage: Page
+	viewport?: PageViewport
 }
 
 export type ResolvedDest = (RefProxy | number)[]

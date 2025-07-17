@@ -85,10 +85,61 @@
 .pdf-viewer__page {
 	position: relative;
 	margin: 0 auto;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .pdf-viewer__canvas {
-	display: flex;
+	display: block;
+}
+
+.pdf-viewer__text-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	opacity: 1;
+	line-height: 1;
+	pointer-events: none;
+	z-index: 1;
+	--scale-factor: 1;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+}
+
+.pdf-viewer__text-layer span {
+	color: transparent;
+	position: absolute;
+	white-space: pre;
+	cursor: text;
+	transform-origin: 0% 0%;
+	pointer-events: auto;
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	font-family: inherit;
+	line-height: 1;
+}
+
+.pdf-viewer__text-layer br {
+	display: none;
+}
+
+.pdf-viewer__text-layer span::selection {
+	background: rgba(0, 100, 255, 0.4);
+	color: transparent;
+}
+
+.pdf-viewer__text-layer span::-moz-selection {
+	background: rgba(0, 100, 255, 0.4);
+	color: transparent;
 }
 
 .pdf-viewer__annotations-layer {
@@ -99,17 +150,21 @@
 	bottom: 0;
 	overflow: hidden;
 	opacity: 1;
+	z-index: 2;
+	pointer-events: none;
 }
 
 .pdf-viewer__annotations-layer section {
 	position: absolute;
 	cursor: pointer;
+	pointer-events: auto;
 }
 
 .pdf-viewer__annotations-layer section a {
 	display: block;
 	width: 100%;
 	height: 100%;
+	pointer-events: auto;
 }
 
 .pdf-viewer__loading,
