@@ -75,6 +75,7 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 | pageRef             | Reference to the inner HTML element of the page.                                                                              |                                            |
 | viewPortScale       | Custom viewport scale.                                                                                                        | `window.devicePixelRatio`                  |
 | annotations         | Enable or disable the annotations.                                                                                            | `true`                                     |
+| textSelection       | Enable or disable the text selection.                                                                                         | `true`                                     |
 | onPageChange        | Function called when the page changes.                                                                                        |                                            |
 | onPageError         | Function called when the page loads fails.                                                                                    |                                            |
 | onPageLoad          | Function called when the page loads successfully.                                                                             |                                            |
@@ -87,6 +88,7 @@ import { Document, InfinityPage } from "ultimate-react-pdf"
 | pageRef             | Reference to the inner HTML element of the page.                                                                              |                                            |
 | viewPortScale       | Function called when the document load fails.                                                                                 | `window.devicePixelRatio`                  |
 | annotations         | Enable or disable the annotations.                                                                                            | `true`                                     |
+| textSelection       | Enable or disable the text selection.                                                                                         | `true`                                     |
 | onPageError         | Function called when the page loads fails.                                                                                    |                                            |
 | onPageLoad          | Function called when the page loads successfully.                                                                             |                                            |
 | className           | Custom classname for the page container.                                                                                      |                                            |
