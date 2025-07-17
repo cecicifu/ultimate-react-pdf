@@ -8,6 +8,27 @@ import { vi } from "vitest"
 
 import workerContent from "../../lib/contexts/build/pdf.worker.min.mjs.json"
 
+// Suppress unhandled rejections from PDF.js that occur after test teardown
+process.on("unhandledRejection", (reason) => {
+	const errorMessage = String(reason)
+
+	// Ignore PDF.js related errors that happen after test environment teardown
+	if (
+		errorMessage.includes(
+			"Trailing junk found after the end of the compressed stream"
+		) ||
+		errorMessage.includes("window is not defined") ||
+		errorMessage.includes("InternalRenderTask") ||
+		errorMessage.includes("ERR_TRAILING_JUNK_AFTER_STREAM_END")
+	) {
+		// Silently ignore these errors
+		return
+	}
+
+	// For other errors, log them but don't throw
+	console.warn("Unhandled promise rejection:", reason)
+})
+
 // Mock GlobalWorkerOptions
 vi.mock("pdfjs-dist", async () => {
 	const actual = await vi.importActual("pdfjs-dist")

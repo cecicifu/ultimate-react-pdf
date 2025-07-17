@@ -2,7 +2,7 @@ import { render } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 
 import { Document } from "@/Document"
-// import { InfinityPage } from "@/InfinityPage"
+import { InfinityPage } from "@/InfinityPage"
 import { Page } from "@/Page"
 
 import { examplePdf } from "../example"
@@ -81,25 +81,25 @@ describe("PdfViewer", () => {
 		expect(queryByTestId("text-layer-1")).not.toBeInTheDocument()
 	})
 
-	// it("should render with InfinityPage and annotation layer", async () => {
-	// 	const { findByTestId } = render(
-	// 		<Document src={importedPdf}>
-	// 			<InfinityPage />
-	// 		</Document>
-	// 	)
+	it("should render with InfinityPage and annotation layer", async () => {
+		const { findByTestId } = render(
+			<Document src={importedPdf}>
+				<InfinityPage />
+			</Document>
+		)
 
-	// 	expect(await findByTestId("annotation-layer-1")).toBeInTheDocument()
-	// 	expect(await findByTestId("annotation-layer-10")).toBeInTheDocument()
-	// })
+		expect(await findByTestId("annotation-layer-1")).toBeInTheDocument()
+		expect(await findByTestId("annotation-layer-10")).toBeInTheDocument()
+	})
 
-	// it("should render with InfinityPage and text layer", async () => {
-	// 	const { findByTestId } = render(
-	// 		<Document src={importedPdf}>
-	// 			<InfinityPage />
-	// 		</Document>
-	// 	)
+	it("should render with InfinityPage and text layer", async () => {
+		const { findByTestId } = render(
+			<Document src={importedPdf}>
+				<InfinityPage />
+			</Document>
+		)
 
-	// 	expect(await findByTestId("text-layer-1")).toBeInTheDocument()
-	// 	expect(await findByTestId("text-layer-10")).toBeInTheDocument()
-	// })
+		expect(await findByTestId("text-layer-1")).toBeInTheDocument()
+		expect(await findByTestId("text-layer-10")).toBeInTheDocument()
+	})
 })
